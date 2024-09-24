@@ -1,0 +1,8 @@
+Upload files:
+0	Configure.xml
+1	Build.xml
+2	Done.xml
+	Upload file: C:/Users/Caleb Schutz/CLionProjects/GatorAVLtzip/cmake-build-debug/Testing/20240921-1920/Configure.xml to DESKTOP-PIOA5NP___Win32-ninja___20240921-1920-Continuous___XML___Configure.xml
+   Error when uploading file: C:/Users/Caleb Schutz/CLionProjects/GatorAVLtzip/cmake-build-debug/Testing/20240921-1920/Configure.xml
+   Error message was: URL rejected: No host part in the URL
+   Problems when submitting via HTTP

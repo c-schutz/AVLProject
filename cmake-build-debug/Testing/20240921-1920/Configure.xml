@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Site BuildName="Win32-ninja"
+	BuildStamp="20240921-1920-Continuous"
+	Name="DESKTOP-PIOA5NP"
+	Generator="ctest-3.27.8"
+	CompilerName="C:/Program Files/JetBrains/CLion 2023.3.3/bin/mingw/bin/g++.exe"
+	CompilerVersion="13.1.0"
+	OSName="Windows"
+	Hostname="DESKTOP-PIOA5NP"
+	OSRelease=" Personal"
+	OSVersion=" (Build 19045)"
+	OSPlatform="AMD64"
+	Is64Bits="1"
+	VendorString="AuthenticAMD"
+	VendorID="Advanced Micro Devices"
+	FamilyID="15"
+	ModelID="0"
+	ProcessorCacheSize="64"
+	NumberOfLogicalCPU="12"
+	NumberOfPhysicalCPU="6"
+	TotalVirtualMemory="21909"
+	TotalPhysicalMemory="14229"
+	LogicalProcessorsPerPhysical="2"
+	ProcessorClockFrequency="3892"
+	>
+	<Configure>
+		<StartDateTime>Sep 21 12:20 Pacific Daylight Time</StartDateTime>
+		<StartConfigureTime>1726946438</StartConfigureTime>
+		<ConfigureCommand>"C:/Program Files/JetBrains/CLion 2023.3.3/bin/cmake/win/x64/bin/cmake.exe" "C:/Users/Caleb Schutz/CLionProjects/GatorAVLtzip"</ConfigureCommand>
+		<Log>-- Configuring done (0.9s)
+-- Generating done (0.0s)
+-- Build files have been written to: C:/Users/Caleb Schutz/CLionProjects/GatorAVLtzip/cmake-build-debug
+</Log>
+		<ConfigureStatus>0</ConfigureStatus>
+		<EndDateTime>Sep 21 12:20 Pacific Daylight Time</EndDateTime>
+		<EndConfigureTime>1726946440</EndConfigureTime>
+		<ElapsedMinutes>0</ElapsedMinutes>
+	</Configure>
+</Site>
