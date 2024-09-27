@@ -4,6 +4,19 @@
 #include "AVLTree.h"
 
 int main() {
+    //testing
+
+    AVLTree testTree = AVLTree();
+    testTree.insert("c", 1);
+    testTree.insert("a", 2);
+    testTree.insert("l", 0);
+    testTree.insert("e", 3);
+    testTree.insert("b", 4);
+    testTree.searchID(4);
+    //testTree.searchID(0);
+
+
+    /*
     //Get the number of commands and turn it into an integer
     std::string numOfCommandsString;
     std::getline(std::cin, numOfCommandsString);
@@ -56,10 +69,10 @@ int main() {
                 commandList.push_back(command.substr(index, j - index + 1));
             }
         }
-        /*test commandList
+        test commandList
         for(auto v: commandList){
             std::cout << v << std::endl;
-        }*/
+        }
 
 
 
@@ -82,7 +95,8 @@ int main() {
                     continue;
                 }
             }
-            //std::cout << commandList[2];
+            //
+            // std::cout << commandList[2];
             studentTree.insert(commandList[1], std::stoi(commandList[2]));
         } else if (commandList[0] == "remove") {
 
@@ -98,9 +112,9 @@ int main() {
             studentTree.printInOrder(studentTree.head);
 
         } else if (commandList[0] == "printPreorder") {
-
+            studentTree.printPreOrder(studentTree.head);
         } else if (commandList[0] == "printPostorder") {
-
+            studentTree.printPostOrder(studentTree.head);
         } else if (commandList[0] == "printLevelCount") {
 
         } else if (commandList[0] == "removeInorder") {
@@ -114,6 +128,7 @@ int main() {
         commandList.clear(); //clear the commandList for the next command
         commandList[0] = "";//do this for some reason (possibly undefined behavior)
     }
+    */
 
     return 0;
 }

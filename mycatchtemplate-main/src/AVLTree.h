@@ -2,6 +2,7 @@
 #define PROJECT1_AVLTREE_H
 #include<iostream>
 #include<string>
+#include <queue>
 
 struct AVLTree {
     struct TreeNode {
@@ -28,12 +29,94 @@ struct AVLTree {
     //Default constructor
     AVLTree() {
     }
+    //helper functions
+    TreeNode* rightRotation(TreeNode* it){
+        TreeNode* sw = it->leftNode;
+        TreeNode* temp = sw->rightNode;
+
+        sw->rightNode = it;
+        it->leftNode = temp;
+
+        it->height = std::max((it->leftNode != nullptr) ? it->leftNode->height : 0, (it->rightNode != nullptr) ? it->rightNode->height : 0) + 1;
+        sw->height = std::max((sw->leftNode != nullptr) ? sw->leftNode->height : 0, (sw->rightNode != nullptr) ? sw->rightNode->height : 0) + 1;
+
+        return sw;
+    }
+
+    TreeNode* leftRotation(TreeNode* it){ //it is the root
+        TreeNode* sw = it->rightNode;
+        TreeNode* temp = sw->leftNode;
+        sw->leftNode = it;
+        it->rightNode = temp;
+
+        it->height = std::max((it->leftNode != nullptr) ? it->leftNode->height : 0, (it->rightNode != nullptr) ? it->rightNode->height : 0) + 1;
+        sw->height = std::max((sw->leftNode != nullptr) ? sw->leftNode->height : 0, (sw->rightNode != nullptr) ? sw->rightNode->height : 0) + 1;
+
+        return sw;
+    }
+
+    int balanceFactor(TreeNode* ntb){
+        int hl = -10;
+        int hr = -10;
+        (ntb->leftNode != nullptr) ? hl = ntb->leftNode->height : hl = 0;
+        (ntb->rightNode != nullptr) ? hr = ntb->rightNode->height : hr = 0;
+        return hl - hr;
+    }
+
+    TreeNode* calculateBalance(TreeNode* it){//finds the node that needs to be balanced and returns the node that is imbalanced
+        if(it == nullptr) {
+            return nullptr;
+        }
+        calculateBalance(it->leftNode);
+        calculateBalance(it->rightNode);
+
+        it->height = std::max((it->leftNode != nullptr) ? it->leftNode->height : -1, (it->rightNode != nullptr) ? it->rightNode->height : -1) + 1;
+
+        if(std::abs(balanceFactor(it)) == 2){
+            std::cout << "imbalanced!" << std::endl;
+            return it;
+        }
+        return nullptr;
+    }
+    void setHeights(TreeNode* it){
+        if(it == nullptr) {
+            return;
+        }
+        setHeights(it->leftNode);
+        setHeights(it->rightNode);
+
+        it->height = std::max((it->leftNode != nullptr) ? it->leftNode->height : 0, (it->rightNode != nullptr) ? it->rightNode->height : 0) + 1;
+        return;
+    }
 
     //functions
-    void searchID(int ID) {
+    TreeNode* searchID(int ID) {
         //use the ID provided to search for the student within the tree
         //if the ID is found print their name
         //otherwise print unsuccessful
+        TreeNode* it = this->head;
+        while(true) {
+            if(it->id == ID) {//make sure it isn't already in the tree
+                std::cout << it->name << std::endl;
+                return it;
+            }
+            if(ID > it->id) {//if ID is greater than the current id
+                if(it->rightNode == nullptr) {
+                    break;
+                }else{
+                    it = it->rightNode;
+                }
+            }
+            else {//if ID is less than the current id
+                if(it->leftNode == nullptr) {
+                    break;
+                }else{
+                    it = it->leftNode;
+                }
+            }
+        }
+        std::cout << "unsuccessful" << std::endl;
+        return nullptr;
     }
 
     void insert(std::string NAME, int ID) {
@@ -56,7 +139,7 @@ struct AVLTree {
             if(ID > it->id) {//if ID is greater than the current id
                 if(it->rightNode == nullptr) {
                     it->rightNode = new TreeNode(NAME, ID);
-                    it->rightNode->height = it->height - 1;//adjust height when placed
+                    break;
                 }
                 else {
                     it = it->rightNode;
@@ -65,7 +148,7 @@ struct AVLTree {
             else {//if ID is less than the current id
                 if(it->leftNode == nullptr) {
                     it->leftNode = new TreeNode(NAME, ID);
-                    it->leftNode->height = it->height - 1;//adjust height when placed
+                    break;
                 }
                 else {
                     it = it->leftNode;
@@ -73,6 +156,89 @@ struct AVLTree {
             }
         }
 
+        //calculate if there is an imbalance and then get that and the previous node
+        TreeNode* result = calculateBalance(this->head);
+        if(result == nullptr){
+            return;
+        }
+        if(result->id == this->head->id){
+            int parentFactor = balanceFactor(result);
+            int childFactor = 0;
+            if(parentFactor == 2){//tree is left heavy, check left child
+                childFactor = balanceFactor(result->leftNode);
+                switch(childFactor){
+                    case 1:
+                        //do right rotation
+                        this->head = rightRotation(result);
+                        break;
+                    case -1:
+                        //do left rotation, right rotation
+                        this->head = leftRotation(result);
+                        this->head = rightRotation(result);
+                        break;
+                }
+            }else{//tree is right heavy, check right child
+                childFactor = balanceFactor(result->rightNode);
+                switch(childFactor){
+                    case -1:
+                        //do left rotation
+                        this->head = leftRotation(result);
+                        break;
+                    case 1:
+                        //do right rotation, left rotation
+                        this->head = rightRotation(result);
+                        this->head = leftRotation(result);
+                        break;
+                }
+            }
+        }
+        else{
+            TreeNode* parent = nullptr;
+            TreeNode* current = this->head;
+
+            while(true){
+                parent = current;
+                if(result->id > current->id) {//if ID is greater than the current id
+                    current = current->rightNode;
+                }
+                else {//if ID is less than the current id
+                    current = current->leftNode;
+                }
+                if(current->id == result->id) {//make sure it isn't already in the tree
+                    break;
+                }
+            }
+
+            int parentFactor = balanceFactor(result);
+            int childFactor = 0;
+            if(parentFactor == 2){//tree is left heavy, check left child
+                childFactor = balanceFactor(result->leftNode);
+                switch(childFactor){
+                    case 1:
+                        //do right rotation
+                        parent->leftNode = rightRotation(result);
+                        break;
+                    case -1:
+                        //do left rotation, right rotation
+                        parent-> leftNode = leftRotation(result);
+                        parent-> leftNode = rightRotation(result);
+                        break;
+                }
+            }else{//tree is right heavy, check right child
+                childFactor = balanceFactor(result->rightNode);
+                switch(childFactor){
+                    case -1:
+                        //do left rotation
+                        parent-> rightNode = leftRotation(result);
+                        break;
+                    case 1:
+                        //do right rotation, left rotation
+                        parent-> rightNode = rightRotation(result);
+                        parent-> rightNode = leftRotation(result);
+                        break;
+                }
+            }
+        }
     }
 
     void remove(int ID) {
@@ -91,34 +257,34 @@ struct AVLTree {
         */
     }
 
-    void printInOrder(TreeNode* head) {
+    void printInOrder(TreeNode* it) {
         //print a comma seperated inorder traversal of the names
-        if(head == nullptr) {
+        if(it == nullptr) {
             return;
         }
-        printInOrder(head->leftNode);
-        std::cout << head->name << ", ";
-        printInOrder(head->rightNode);
+        printInOrder(it->leftNode);
+        std::cout << it->name << balanceFactor(it) << ", ";
+        printInOrder(it->rightNode);
     }
 
-    void printPreOrder(TreeNode* head) {
+    void printPreOrder(TreeNode* it) {
         //print a comma seperated preorder traversal of the names
-        if(head == nullptr) {
+        if(it == nullptr) {
             return;
         }
-        std::cout << head->name << ", ";
-        printPreOrder(head->leftNode);
-        printPreOrder(head->rightNode);
+        std::cout << it->name << ", ";
+        printPreOrder(it->leftNode);
+        printPreOrder(it->rightNode);
     }
 
-    void printPostOrder() {
+    void printPostOrder(TreeNode* it) {
         //print a comma seperated postorder traversal of the names
-        if(head == nullptr) {
+        if(it == nullptr) {
             return;
         }
-        printPreOrder(head->leftNode);
-        printPreOrder(head->rightNode);
-        std::cout << head->name << ", ";
+        printPostOrder(it->leftNode);
+        printPostOrder(it->rightNode);
+        std::cout << it->name << ", ";
     }
 
     void printLevelCount() {
